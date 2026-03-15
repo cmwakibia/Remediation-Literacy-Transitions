@@ -105,3 +105,4 @@ desktop.ini
 # Knitr/RMarkdown cache
 *_cache/
 *_files/
+DoFile/
