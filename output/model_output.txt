@@ -1,0 +1,289 @@
+============================================================
+MULTISTATE LITERACY TRANSITION MODEL ANALYSIS
+============================================================
+Date: 2026-03-15 19:41 
+
+Model Structure:
+  PRIMARY: Semi-Markov bidirectional (full covariates)
+  COMPARISON 1: Markov (no time_in_state)
+  COMPARISON 2: Unidirectional (no regressions)
+  COMPARISON 3: Story-terminal (binary survival)
+  CLUSTERING: Robust SE by village
+============================================================
+
+Analysis sample (volunteer data complete):
+  Bidirectional: 4683 transitions from 1809 learners
+  Unidirectional: 4283 transitions
+
+===== FITTING PRIMARY MODEL: SEMI-MARKOV =====
+Covariates: female + age + county + time_in_state + volunteer
+Note: attendance excluded (collinear with time variable)
+Clustering: Robust SE by village
+
+Events: 2324 
+Coefficients: 150 
+Concordance: 0.781 
+
+===== FITTING COMPARISON: MARKOV MODEL =====
+Same covariates, NO time_in_state
+
+Events: 2324 
+Concordance: 0.646 
+
+===== FITTING COMPARISON: UNIDIRECTIONAL MODEL =====
+Semi-Markov specification, but excluding regression transitions
+
+Events: 2122 
+Transitions excluded: 0 regressions
+Concordance: 0.735 
+
+===== MODEL BUILDING SEQUENCE =====
+
+===== FITTING M0: NULL MODEL =====
+Events: 4532 
+Log-likelihood: -27961.4 
+
+===== FITTING M1: DEMOGRAPHICS ONLY =====
+Events: 2324 
+Concordance: 0.58 
+
+===== FITTING M2: DEMOGRAPHICS + COUNTY =====
+Events: 2324 
+Concordance: 0.602 
+
+===== FITTING M3: + ATTENDANCE =====
+Events: 2324 
+Concordance: 0.71 
+
+===== SEMI-MARKOV VS MARKOV COMPARISON =====
+Purpose: Demonstrate effect of duration dependence
+
+Model Fit Comparison:
+# A tibble: 2 × 6
+  Model       Events Coefficients  LogLik    AIC Concordance
+  <chr>        <dbl>        <int>   <dbl>  <dbl>       <dbl>
+1 Semi-Markov   2324          150 -12141. 24561.       0.781
+2 Markov        2324          135 -12570. 25386.       0.646
+
+Likelihood Ratio Test:
+  Chi-sq = 856.96 , df = 15 , p = < 2.22e-16 
+  --> Semi-Markov significantly improves fit
+  --> Duration dependence is present in the data
+
+Sojourn Time Effects (time_in_state hazard ratios):
+# A tibble: 15 × 7
+   transition             trans_type    hr hr_lower hr_upper  p.value sig_stars
+   <chr>                  <chr>      <dbl>    <dbl>    <dbl>    <dbl> <chr>    
+ 1 Beginner -> Letter     Progressi… 0.537    0.420    0.687 7.94e- 7 ***      
+ 2 Letter -> Letter       Stagnation 0.647    0.582    0.720 1.01e-15 ***      
+ 3 Word -> Letter         Regression 0.620    0.373    1.03  6.44e- 2 .        
+ 4 Beginner -> Word       Progressi… 0.480    0.381    0.606 6.05e-10 ***      
+ 5 Letter -> Word         Progressi… 0.737    0.675    0.806 1.78e-11 ***      
+ 6 Word -> Word           Stagnation 0.701    0.631    0.779 3.17e-11 ***      
+ 7 Paragraph -> Word      Regression 0.726    0.538    0.979 3.59e- 2 *        
+ 8 Beginner -> Paragraph  Progressi… 0.509    0.400    0.648 4.46e- 8 ***      
+ 9 Letter -> Paragraph    Progressi… 0.535    0.452    0.633 3.21e-13 ***      
+10 Word -> Paragraph      Progressi… 0.762    0.703    0.826 3.66e-11 ***      
+11 Paragraph -> Paragraph Stagnation 0.638    0.583    0.697 4.41e-23 ***      
+12 Beginner -> Story      Progressi… 0.493    0.365    0.667 4.58e- 6 ***      
+13 Letter -> Story        Progressi… 0.551    0.282    1.08  8.10e- 2 .        
+14 Word -> Story          Progressi… 0.547    0.398    0.751 1.99e- 4 ***      
+15 Paragraph -> Story     Progressi… 0.732    0.664    0.808 4.99e-10 ***      
+
+===== BIDIRECTIONAL VS UNIDIRECTIONAL COMPARISON =====
+Purpose: Quantify information lost by ignoring regressions
+
+Transition Coverage:
+  Bidirectional: 4683 transitions
+  Unidirectional: 4283 transitions
+  Regressions excluded: 400 ( 8.5 %)
+
+Regression Transition Detail:
+# A tibble: 6 × 5
+  from_label to_label     n transition              pct
+  <fct>      <fct>    <int> <chr>                 <dbl>
+1 Paragraph  Word       293 Paragraph -> Word      73.2
+2 Word       Letter      35 Word -> Letter          8.8
+3 Paragraph  Letter      35 Paragraph -> Letter     8.8
+4 Letter     Beginner    26 Letter -> Beginner      6.5
+5 Paragraph  Beginner     9 Paragraph -> Beginner   2.2
+6 Word       Beginner     2 Word -> Beginner        0.5
+
+Model Fit:
+# A tibble: 2 × 4
+  Model          Events Transitions_Modeled Concordance
+  <chr>           <dbl>               <int>       <dbl>
+1 Bidirectional    2324                  20       0.781
+2 Unidirectional   2122                  14       0.735
+
+Coefficient Comparison (shared forward/stagnation transitions):
+  Coefficients compared: 130 
+  Mean HR ratio (bi/uni): 0.974 
+  Correlation of log(HR): 0.804 
+
+Regression-Specific Coefficients (only in bidirectional model):
+# A tibble: 6 × 7
+  base_covariate transition           hr hr_lower hr_upper p.value sig_stars
+  <chr>          <chr>             <dbl>    <dbl>    <dbl>   <dbl> <chr>    
+1 female         Word -> Letter    1.61     0.294    8.80   0.583  ""       
+2 age_centered   Word -> Letter    1.09     0.843    1.41   0.510  ""       
+3 time_in_state  Word -> Letter    0.620    0.373    1.03   0.0644 "."      
+4 female         Paragraph -> Word 0.829    0.357    1.92   0.662  ""       
+5 age_centered   Paragraph -> Word 1.04     0.820    1.33   0.724  ""       
+6 time_in_state  Paragraph -> Word 0.726    0.538    0.979  0.0359 "*"      
+
+===== CREATING STORY-TERMINAL DATASET =====
+Learners: 1809 
+Reached Story: 805 ( 44.5 %)
+Censored: 1004 
+
+By baseline level:
+# A tibble: 4 × 4
+  baseline_label     n n_story pct_story
+  <fct>          <int>   <int>     <dbl>
+1 Beginner         391      90      23  
+2 Letter           608     220      36.2
+3 Word             284     210      73.9
+4 Paragraph        526     285      54.2
+
+===== FITTING STORY-TERMINAL MODEL =====
+Standard survival: time to Story attainment (binary outcome)
+This represents a traditional impact evaluation approach
+
+Events (reached Story): 398 
+Censored: 1411 
+Concordance: 0.661 
+
+===== MULTISTATE VS STORY-TERMINAL COMPARISON =====
+Purpose: Demonstrate information gained by multistate approach
+         vs traditional binary survival analysis
+
+1. MODEL STRUCTURE
+   Multistate: Models all transitions between 5 literacy states
+   Story-Terminal: Single binary outcome (reached Story yes/no)
+
+   Multistate models 15 distinct transitions
+   Story-Terminal models 1 outcome (absorption into Story)
+
+2. COEFFICIENT COMPARISON
+   Story-Terminal gives ONE hazard ratio per covariate
+   Multistate gives TRANSITION-SPECIFIC hazard ratios
+
+   Comparison of key covariates:
+
+# A tibble: 4 × 4
+  term           hr_story hr_range    n_transitions
+  <chr>             <dbl> <chr>               <int>
+1 female             1.23 1.08 - 2.55             4
+2 age_centered       1.28 1.08 - 1.39             4
+3 county_fKilifi     2.25 1.65 - 1.91             4
+4 county_fKitui      5.09 NA - NA                 4
+
+3. WHAT STORY-TERMINAL MISSES
+
+   a) Transition-specific variation:
+      Female HR ranges from 0.83 to 2.55 
+      Significant in 2 of 15 transitions
+      Story-Terminal gives single HR: 1.23 
+
+   b) Regression insights (completely invisible to Story-Terminal):
+      Multistate models 2 regression transitions
+      with 2 having significant covariate effects
+      Story-Terminal: Cannot model regression at all
+
+   c) Pathway insights:
+      Story-Terminal cannot explain WHY Word-level learners have higher
+      Story attainment than Paragraph-level learners (despite being
+      further from Story). Multistate reveals it's due to Para->Word
+      regression risk.
+
+4. ABSORPTION PROBABILITY BY BASELINE
+   Empirical Story attainment by baseline level:
+# A tibble: 4 × 4
+  baseline_label     n n_story pct_story_empirical
+  <fct>          <int>   <int>               <dbl>
+1 Beginner         391      90                23  
+2 Letter           608     220                36.2
+3 Word             284     210                73.9
+4 Paragraph        526     285                54.2
+
+   Note: Story-Terminal model cannot explain the non-monotonic pattern
+   where Word (baseline 3) outperforms Paragraph (baseline 4)
+
+5. SUMMARY COMPARISON
+# A tibble: 5 × 3
+  Aspect                            Multistate               Story_Terminal    
+  <chr>                             <chr>                    <chr>             
+1 Transitions modeled               15                       1 (Story vs not)  
+2 Coefficients per covariate        15 (transition-specific) 1 (pooled across …
+3 Can model regression              Yes                      No                
+4 Pathway-specific insights         Yes                      No                
+5 Duration dependence (semi-Markov) Yes (via time_in_state)  No                
+
+===== DIAGNOSTICS: Primary Semi-Markov =====
+
+1. PROPORTIONAL HAZARDS ASSUMPTION
+  Violations (p < 0.05): 19 of 105 
+  Global test: Chi-sq = 540.3 , p = < 2.22e-16 
+
+  Coefficients with PH violations:
+# A tibble: 19 × 4
+   term              transition             chisq        p
+   <chr>             <chr>                  <dbl>    <dbl>
+ 1 time_in_state_1:2 Beginner -> Letter     57.9  2.73e-14
+ 2 time_in_state_2:2 Letter -> Letter       22.5  2.12e- 6
+ 3 time_in_state_3:2 Word -> Letter          5.17 2.29e- 2
+ 4 time_in_state_1:3 Beginner -> Word      109.   1.61e-25
+ 5 vol_age_cat_f_1:3 Beginner -> Word        8.34 3.95e- 2
+ 6 time_in_state_2:3 Letter -> Word          4.21 4.02e- 2
+ 7 vol_edlevel_f_2:3 Letter -> Word          8.55 3.45e- 3
+ 8 vol_age_cat_f_2:3 Letter -> Word         16.1  1.08e- 3
+ 9 time_in_state_3:3 Word -> Word           13.2  2.78e- 4
+10 time_in_state_1:4 Beginner -> Paragraph  70.7  4.20e-17
+11 vol_female_2:4    Letter -> Paragraph     5.92 1.50e- 2
+12 vol_age_cat_f_2:4 Letter -> Paragraph    10.7  1.34e- 2
+13 age_centered_3:4  Word -> Paragraph       3.92 4.77e- 2
+14 vol_female_3:4    Word -> Paragraph       6.85 8.87e- 3
+15 vol_age_cat_f_3:4 Word -> Paragraph      11.1  1.14e- 2
+16 time_in_state_1:5 Beginner -> Story       9.14 2.51e- 3
+17 time_in_state_4:5 Paragraph -> Story      8.03 4.61e- 3
+18 vol_female_4:5    Paragraph -> Story      9.03 2.66e- 3
+19 vol_age_cat_f_4:5 Paragraph -> Story      9.70 2.13e- 2
+
+2. MODEL FIT STATISTICS
+  Concordance: 0.781 (SE: 0.01 )
+  Log-likelihood: -12141.3 
+  AIC: 24560.7 
+  LR test: Chi-sq = 1365.9 , df = 139 , p = < 2.22e-16 
+
+3. INFLUENCE DIAGNOSTICS
+  Influence threshold: |dfbeta| > 0.047 
+  Observations exceeding threshold: 300 ( 12.5 %)
+
+===== SENSITIVITY ANALYSIS =====
+
+1. MATCHED VS UNMATCHED SAMPLE CHARACTERISTICS
+
+Sample Characteristics:
+# A tibble: 2 × 9
+  matched n_learners n_transitions pct_female mean_age pct_regression
+  <lgl>        <int>         <int>      <dbl>    <dbl>          <dbl>
+1 FALSE         1092          2831      0.468  -0.0376         0.0911
+2 TRUE           717          1852      0.509   0.0855         0.0767
+# ℹ 3 more variables: pct_bungoma <dbl>, pct_kilifi <dbl>, sample <chr>
+
+Statistical Tests (matched vs unmatched):
+  Gender: Chi-sq = 1.64 , p = 0.19985 
+  County: Chi-sq = 44.8 , p = 1.8672e-10 
+  Age: t = -0.99 , p = 0.32208 
+  --> CAUTION: Matched sample differs by county composition
+
+2. COEFFICIENT STABILITY
+
+2. COEFFICIENT STABILITY
+  Coefficient correlation (full vs matched): 0.089 
+  Mean absolute % difference: 343.7 %
+  --> CAUTION: Substantial coefficient differences between samples
+
+===== EXPORTING RESULTS TO EXCEL =====
+Results exported to: ../output//model_results.xlsx 

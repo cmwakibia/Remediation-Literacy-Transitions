@@ -1,0 +1,107 @@
+# ============================================
+# Thesis Project: Remediation-Literacy-Transitions
+# Multi-state survival analysis for literacy transitions
+# ============================================
+
+# ============================================
+# Archive & Working Folders (not for version control)
+# ============================================
+RScripts/Archive/
+RScripts/Archive-March/
+Notes/
+With-Maurice/
+Report_CH45/
+Data/Archive/
+
+# ============================================
+# Specific File Exclusions
+# ============================================
+
+# Text files in RScripts folder (keep .R files, ignore .txt)
+RScripts/*.txt
+
+# Bibliography file in root Analysis folder
+# (Zotero-managed, regenerated frequently)
+*.bib
+
+# Specific original data files (PII/sensitive)
+Data/mv-camp-English-2025-wide-data_originial.dta
+Data/my_village_2023_volunteers_originial.dta
+Data/my-village-English-baselines-data_originial.dta
+
+# All Excel files in Data folder
+Data/*.xlsx
+
+# ============================================
+# R / RStudio
+# ============================================
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+.Rproj.user/
+
+# Session files
+*.Rproj.user/
+
+# ============================================
+# Data Files - General (uncomment if using LFS instead)
+# ============================================
+# Large data files - consider using Git LFS for these
+# *.csv
+# *.dta
+# *.rds
+# *.parquet
+
+# ============================================
+# renv (if using)
+# ============================================
+renv/library/
+renv/local/
+renv/cellar/
+renv/staging/
+renv/python/
+renv/sandbox/
+
+# ============================================
+# targets (if using)
+# ============================================
+_targets/objects/
+_targets/scratch/
+_targets/user/
+
+# ============================================
+# Outputs that can be regenerated
+# ============================================
+# Uncomment if you don't want to track these
+# *.html
+# *.pdf
+
+# ============================================
+# OS & Editor Files
+# ============================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+*.swp
+*.swo
+
+# VS Code
+.vscode/
+
+# ============================================
+# Temporary & Cache Files
+# ============================================
+*.tmp
+*.temp
+*.log
+*.cache
+
+# R package build artifacts
+*.tar.gz
+*.Rcheck/
+
+# Knitr/RMarkdown cache
+*_cache/
+*_files/
