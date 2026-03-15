@@ -107,7 +107,7 @@ ggplot2_4.0.2, tidyr_1.3.2, dplyr_1.2.0, haven_2.5.5
 
 </details>
 
----## License
+## License
 
 This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
